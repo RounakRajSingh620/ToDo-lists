@@ -16,8 +16,19 @@ function App() {
     // todos.splice(index,1);
 
     setTodos(todos.filter((e) => {
-      return e !== todo;
+      return e!== todo;
     }))
+  }
+  const addTodo = (title, desc) => {
+    console.log("I am adding this todo", title, desc)
+    let sno = todos[todos.length - 1].sno + 1;
+    const myTodo = {
+      sno: sno,
+      title: title,
+      desc: desc,
+    }
+    setTodos([...todos, myTodo]);
+    console.log(myTodo);
   }
   const [todos, setTodos] = useState([
     {
@@ -39,7 +50,7 @@ function App() {
   return (
     <>
       <Header title="My Todos list" searchBar={false} />
-      <AddTodo/>
+      <AddTodo addTodo={addTodo} />
       <Todos todos={todos} onDelete={onDelete} />
 
       <Footer />
