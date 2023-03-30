@@ -9,6 +9,13 @@ import AddTodo from './MyComponents/AddTodo';
 
 
 function App() {
+  let initTodo;
+  if (localStorage.getItem("todos")===null) {
+    initTodo = [];
+  }
+  else {
+    initTodo = JSON.parse(localStorage.getItem("todos"));
+  }
   const onDelete = (todo) => {
     console.log("Todo Deleted", "todo")
     // Deleting this way in react does not work
@@ -16,12 +23,19 @@ function App() {
     // todos.splice(index,1);
 
     setTodos(todos.filter((e) => {
-      return e!== todo;
-    }))
+      return e !== todo;
+    }));
+    localStorage.setItem("todos", JSON.stringify(todos));
   }
   const addTodo = (title, desc) => {
     console.log("I am adding this todo", title, desc)
-    let sno = todos[todos.length - 1].sno + 1;
+    let sno;
+    if (todos.length == 0) {
+      sno = 0;
+    }
+    else {
+      sno = todos[todos.length - 1].sno + 1;
+    }
     const myTodo = {
       sno: sno,
       title: title,
@@ -29,34 +43,22 @@ function App() {
     }
     setTodos([...todos, myTodo]);
     console.log(myTodo);
+
+    localStorage.setItem("todos", JSON.stringify(todos));
   }
-  const [todos, setTodos] = useState([
-    {
-      sno: 1,
-      title: "Go to market",
-      desc: "You need to go to the market to get this job done"
-    },
-    {
-      sno: 2,
-      title: "Go to mall",
-      desc: "You need to go to the market to get this job done2"
-    },
-    {
-      sno: 3,
-      title: "Go to ghat",
-      desc: "You need to go to the market to get this job done3"
-    }
-  ]);
-  return (
-    <>
-      <Header title="My Todos list" searchBar={false} />
-      <AddTodo addTodo={addTodo} />
-      <Todos todos={todos} onDelete={onDelete} />
 
-      <Footer />
+const [todos, setTodos] = useState(initTodo);
+return (
+  <>
+    <Header title="My Todos list" searchBar={false} />
+    <AddTodo addTodo={addTodo} />
+    <Todos todos={todos} onDelete={onDelete} />
 
-    </>
-  );
+    <Footer />
+
+  </>
+);
+
 }
 
 export default App;
